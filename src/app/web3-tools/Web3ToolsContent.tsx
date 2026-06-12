@@ -1,0 +1,344 @@
+'use client';
+
+import { useState, useMemo, useEffect } from 'react';
+import { FallbackImage } from '@/components/FallbackImage';
+import { useRouter, useSearchParams, usePathname } from 'next/navigation';
+import Pagination from '@/components/Pagination';
+import web3ToolsData from '@/data/web3-tools.json';
+import { FaXTwitter, FaTelegram } from 'react-icons/fa6';
+import { BsDiscord } from 'react-icons/bs';
+import { RiExternalLinkLine } from 'react-icons/ri';
+import { FaTimes } from 'react-icons/fa';
+
+const ITEMS_PER_PAGE = 8;
+
+const categories = [
+    "DEX",
+    "CEX",
+    "Analytics",
+    "Bridge",
+    "Wallets",
+    "Security",
+    "Airdrop Tracker",
+    "Research",
+    "All"
+];
+
+export default function Web3ToolsContent() {
+    const router = useRouter();
+    const searchParams = useSearchParams();
+    const pathname = usePathname();
+
+    const [localSearchQuery, setLocalSearchQuery] = useState(searchParams.get('q') || '');
+    const activeCategory = searchParams.get('category') || 'All';
+    const currentPage = Number(searchParams.get('page')) || 1;
+
+    // Modal state
+    const [selectedTool, setSelectedTool] = useState<typeof web3ToolsData[0] | null>(null);
+
+    useEffect(() => {
+        const handler = setTimeout(() => {
+            const currentQ = searchParams.get('q') || '';
+            if (localSearchQuery !== currentQ) {
+                const params = new URLSearchParams(searchParams.toString());
+                if (localSearchQuery) params.set('q', localSearchQuery);
+                else params.delete('q');
+                params.set('page', '1');
+                router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+            }
+        }, 300);
+        return () => clearTimeout(handler);
+    }, [localSearchQuery, pathname, router, searchParams]);
+
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'Escape') {
+                setSelectedTool(null);
+            }
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, []);
+
+    const updateURL = (newCategory: string, newQuery: string, newPage: number) => {
+        const params = new URLSearchParams();
+        if (newCategory !== 'All') params.set('category', newCategory);
+        if (newQuery) params.set('q', newQuery);
+        if (newPage > 1) params.set('page', newPage.toString());
+        
+        router.replace(`${pathname}?${params.toString()}`, { scroll: false });
+    };
+
+    const filteredTools = useMemo(() => {
+        return web3ToolsData.filter(tool => {
+            const matchesSearch = tool.name.toLowerCase().includes(localSearchQuery.toLowerCase());
+            const matchesCategory = activeCategory === 'All' || tool.category === activeCategory;
+            return matchesSearch && matchesCategory;
+        });
+    }, [localSearchQuery, activeCategory]);
+
+    const totalItems = filteredTools.length;
+    const totalPages = Math.ceil(totalItems / ITEMS_PER_PAGE);
+
+    const displayedTools = filteredTools.slice(
+        (currentPage - 1) * ITEMS_PER_PAGE,
+        currentPage * ITEMS_PER_PAGE
+    );
+
+    const handleCategoryChange = (category: string) => {
+        updateURL(category, localSearchQuery, 1);
+    };
+
+    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+        setLocalSearchQuery(e.target.value);
+    };
+
+    const handlePageChange = (page: number) => {
+        updateURL(activeCategory, localSearchQuery, page);
+    };
+
+    return (
+        <div className="min-h-screen body-color text-fill-color p-8 pt-12 font-sans">
+            <div className="max-w-7xl mx-auto flex flex-col items-center">
+                <div className="w-full max-w-2xl mb-8 text-center">
+                    <h1 className="text-3xl font-bold mb-2">
+                        Web3 Tools Directory
+                    </h1>
+                    <p className="text-fill-color/70 max-w-md mx-auto">
+                        Explore our curated collection of essential crypto and Web3 platforms to elevate your journey.
+                    </p>
+                </div>
+
+                {/* Search Bar */}
+                <div className="w-full max-w-xl mb-6 relative">
+                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-fill-color/50">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
+                            </svg>
+                        </div>
+                    <input
+                        type="text"
+                        placeholder="Search Web3 Tools"
+                        value={localSearchQuery}
+                        onChange={handleSearchChange}
+                        className="w-full py-3 pl-12 pr-6 rounded-full card-color border border-color focus:outline-none focus:border-blue-500 text-fill-color placeholder:text-fill-color/50 transition-colors"
+                    />
+                </div>
+
+                {/* Categories */}
+                <div className="flex flex-wrap justify-center items-center gap-2 mb-10">
+                    {categories.map((category) => (
+                        <button
+                            key={category}
+                            onClick={() => handleCategoryChange(category)}
+                            className={`px-4 py-2 rounded-full text-sm font-medium leading-none transition-colors duration-200 ${
+                                activeCategory === category
+                                    ? 'bg-blue-600 text-white'
+                                    : 'card-color text-fill-color/70 hover:text-fill-color border border-color'
+                            }`}
+                        >
+                            {category}
+                        </button>
+                    ))}
+                </div>
+
+                {/* Tools Grid */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-7xl">
+                    {displayedTools.length > 0 ? (
+                        displayedTools.map((tool) => (
+                            <div
+                                key={tool.id}
+                                onClick={() => setSelectedTool(tool)}
+                                className="glass-card rounded-2xl p-5 flex flex-col h-full card-hover transition-all cursor-pointer"
+                            >
+                                <div className="flex items-center gap-4 mb-4">
+                                    <div className="w-16 h-16 relative rounded-xl overflow-hidden bg-card-color shrink-0">
+                                        <FallbackImage
+                                            src={tool.imageUrl}
+                                            alt={tool.name}
+                                            fill
+                                            className="object-cover"
+                                            unoptimized
+                                        />
+                                    </div>
+                                    <div>
+                                        <div className="flex items-center gap-2 mb-1">
+                                            <h3 className="text-lg font-bold text-fill-color leading-tight">
+                                                {tool.name}
+                                            </h3>
+                                            {tool.website && (
+                                                <a 
+                                                    href={tool.website} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer" 
+                                                    onClick={(e) => e.stopPropagation()}
+                                                    className="opacity-70 hover:opacity-100 transition-opacity text-fill-color"
+                                                    aria-label="Website"
+                                                    title="Visit Website"
+                                                >
+                                                    <RiExternalLinkLine className="w-5 h-5" />
+                                                </a>
+                                            )}
+                                        </div>
+                                        <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                                            {tool.category}
+                                        </span>
+                                    </div>
+                                </div>
+                                
+                                <p className="text-sm text-fill-color/70 mb-4 flex-grow line-clamp-3">
+                                    {tool.description}
+                                </p>
+
+                                <div className="mb-4">
+                                    <h4 className="text-xs font-semibold text-fill-color/50 mb-2 uppercase tracking-wider">Supported Chains</h4>
+                                    <div className="flex flex-wrap gap-1.5">
+                                        {tool.chains.map((chain, index) => (
+                                            <span key={index} className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                                {chain}
+                                            </span>
+                                        ))}
+                                    </div>
+                                </div>
+
+                                <div className="flex items-center gap-4 mt-auto pt-4">
+                                    {tool.twitter && (
+                                        <a href={tool.twitter} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Twitter">
+                                            <FaXTwitter className="w-5 h-5" />
+                                        </a>
+                                    )}
+                                    {tool.discord && (
+                                        <a href={tool.discord} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Discord">
+                                            <BsDiscord className="w-5 h-5" />
+                                        </a>
+                                    )}
+                                    {tool.telegram && (
+                                        <a href={tool.telegram} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Telegram">
+                                            <FaTelegram className="w-5 h-5" />
+                                        </a>
+                                    )}
+                                </div>
+                            </div>
+                        ))
+                    ) : (
+                        <div className="col-span-full w-full flex-col flex gap-4">
+                            <div className="text-center py-10">
+                                <FallbackImage
+                                    src="https://nekowawolf.github.io/cdn-images/images/2026/1771661079_pixchan.png"
+                                    alt="No data found"
+                                    width={176}
+                                    height={176}
+                                    className="mx-auto"
+                                />
+                                <p className="text-fill-color/50 mt-4">No data available.</p>
+                            </div>
+                        </div>
+                    )}
+
+                </div>
+
+                {/* Pagination */}
+                {totalPages > 1 && (
+                    <Pagination
+                        currentPage={currentPage}
+                        itemsPerPage={ITEMS_PER_PAGE}
+                        totalItems={totalItems}
+                        onPageChange={handlePageChange}
+                    />
+                )}
+            </div>
+
+            {/* Modal Popup */}
+            {selectedTool && (
+                <div 
+                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                    onClick={() => setSelectedTool(null)}
+                >
+                    <div 
+                        className="glass-card rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-color shadow-2xl relative"
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        <button 
+                            onClick={() => setSelectedTool(null)}
+                            className="absolute top-4 right-4 opacity-70 hover:opacity-100 transition-opacity text-fill-color"
+                        >
+                            <FaTimes size={20} />
+                        </button>
+                        
+                        <div className="p-6 sm:p-8">
+                            <div className="flex items-center gap-4 mb-6">
+                                <div className="w-20 h-20 relative rounded-xl overflow-hidden bg-card-color2 shrink-0">
+                                    <FallbackImage
+                                        src={selectedTool.imageUrl}
+                                        alt={selectedTool.name}
+                                        fill
+                                        className="object-cover"
+                                        unoptimized
+                                    />
+                                </div>
+                                <div>
+                                    <div className="flex items-center gap-2 mb-2">
+                                        <h2 className="text-2xl font-bold text-fill-color leading-tight">
+                                            {selectedTool.name}
+                                        </h2>
+                                        {selectedTool.website && (
+                                            <a 
+                                                href={selectedTool.website} 
+                                                target="_blank" 
+                                                rel="noopener noreferrer" 
+                                                className="opacity-70 hover:opacity-100 transition-opacity text-fill-color"
+                                                title="Visit Website"
+                                            >
+                                                <RiExternalLinkLine className="w-6 h-6" />
+                                            </a>
+                                        )}
+                                    </div>
+                                    <span className="text-sm px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                                        {selectedTool.category}
+                                    </span>
+                                </div>
+                            </div>
+
+                            <div className="mb-6">
+                                <h4 className="text-sm font-semibold text-fill-color/50 mb-2 uppercase tracking-wider">About</h4>
+                                <p className="text-base text-fill-color/80 leading-relaxed">
+                                    {selectedTool.description}
+                                </p>
+                            </div>
+
+                            <div className="mb-8">
+                                <h4 className="text-sm font-semibold text-fill-color/50 mb-3 uppercase tracking-wider">Supported Chains</h4>
+                                <div className="flex flex-wrap gap-2">
+                                    {selectedTool.chains.map((chain, index) => (
+                                        <span key={index} className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                            {chain}
+                                        </span>
+                                    ))}
+                                </div>
+                            </div>
+
+                            <div className="flex items-center gap-5 pt-6 mt-auto">
+                                {selectedTool.twitter && (
+                                    <a href={selectedTool.twitter} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Twitter">
+                                        <FaXTwitter className="w-6 h-6" />
+                                    </a>
+                                )}
+                                {selectedTool.discord && (
+                                    <a href={selectedTool.discord} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Discord">
+                                        <BsDiscord className="w-6 h-6" />
+                                    </a>
+                                )}
+                                {selectedTool.telegram && (
+                                    <a href={selectedTool.telegram} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Telegram">
+                                        <FaTelegram className="w-6 h-6" />
+                                    </a>
+                                )}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+        </div>
+    );
+}
