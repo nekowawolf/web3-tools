@@ -1,6 +1,6 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, Suspense } from 'react';
 import { FallbackImage } from '@/components/FallbackImage';
 import Pagination from '@/components/Pagination';
 import { FaXTwitter, FaTelegram } from 'react-icons/fa6';
@@ -25,7 +25,7 @@ const categories = [
     "All"
 ];
 
-export default function Web3ToolsContent() {
+function Web3ToolsContentInner() {
     const {
         displayedTools,
         loading,
@@ -300,5 +300,17 @@ export default function Web3ToolsContent() {
             )}
 
         </div>
+    );
+}
+
+export default function Web3ToolsContent() {
+    return (
+        <Suspense fallback={
+            <div className="flex justify-center items-center min-h-[50vh]">
+                <Spinner className="text-blue-500 size-10" />
+            </div>
+        }>
+            <Web3ToolsContentInner />
+        </Suspense>
     );
 }
