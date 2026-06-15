@@ -24,7 +24,7 @@ export default function Footer() {
                         NWW
                     </h3>
                     <h3 className="text-[10vw] font-black text-fill-color opacity-10 mx-2 tracking-tighter">
-                        AI TOOLS
+                        WEB3
                     </h3>
                 </div>
 
