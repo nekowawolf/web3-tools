@@ -16,13 +16,13 @@ const ITEMS_PER_PAGE = 8;
 const categories = [
     "DEX",
     "CEX",
+    "All",
     "Analytics",
     "Bridge",
     "Wallets",
     "Security",
     "Airdrop Tracker",
-    "Research",
-    "All"
+    "Research"
 ];
 
 function Web3ToolsContentInner() {
