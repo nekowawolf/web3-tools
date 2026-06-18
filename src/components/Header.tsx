@@ -84,21 +84,21 @@ export default function Header() {
             <nav className="hidden sm:flex items-center gap-6">
               <Link
                 href="/web3-tools"
-                className="text-fill-color/70 font-semibold hover:opacity-80"
+                className="text-fill-color/70 font-semibold hover:!text-blue-600 transition-colors duration-300"
               >
                 Web3 Tools
               </Link>
-               <Link
+              <Link
                 href="https://airdrop.nekowawolf.xyz" target="_blank"
-                className="text-fill-color/70 font-semibold hover:opacity-80"
+                className="text-fill-color/70 font-semibold hover:!text-blue-600 transition-colors duration-300"
               >
                 Airdrops
               </Link>
               <Link
-                href="https://cc.nekowawolf.xyz/" target="_blank"
-                className="text-fill-color/70 font-semibold hover:opacity-80"
+                href="https://github.nekowawolf.xyz/" target="_blank"
+                className="text-fill-color/70 font-semibold hover:!text-blue-600 transition-colors duration-300"
               >
-                Community
+                GitHub Repos
               </Link>
             </nav>
 
@@ -153,23 +153,23 @@ export default function Header() {
             <Link
               href="/web3-tools"
               onClick={() => setIsMenuOpen(false)}
-              className="block font-semibold text-fill-color/70"
+              className="block font-semibold text-fill-color/70 hover:!text-blue-600 transition-colors duration-300"
             >
               Web3 Tools
             </Link>
-              <Link
+            <Link
               href="https://airdrop.nekowawolf.xyz" target="_blank"
               onClick={() => setIsMenuOpen(false)}
-              className="block font-semibold text-fill-color/70"
+              className="block font-semibold text-fill-color/70 hover:!text-blue-600 transition-colors duration-300"
             >
               Airdrops
             </Link>
-             <Link
-              href="https://cc.nekowawolf.xyz/" target="_blank"
+            <Link
+              href="https://github.nekowawolf.xyz/" target="_blank"
               onClick={() => setIsMenuOpen(false)}
-              className="block font-semibold text-fill-color/70"
+              className="block font-semibold text-fill-color/70 hover:!text-blue-600 transition-colors duration-300"
             >
-              Community
+              GitHub Repos
             </Link>
 
             <div className="flex gap-3 pt-2">
