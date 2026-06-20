@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react';
 import { FallbackImage } from '@/components/FallbackImage';
 import Pagination from '@/components/Pagination';
-import { FaXTwitter, FaTelegram } from 'react-icons/fa6';
+import { FaXTwitter, FaTelegram, FaInstagram } from 'react-icons/fa6';
 import { BsDiscord } from 'react-icons/bs';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import { FaTimes } from 'react-icons/fa';
@@ -166,6 +166,11 @@ function Web3ToolsContentInner() {
                                                     <FaXTwitter className="w-5 h-5" />
                                                 </a>
                                             )}
+                                            {tool.instagram && (
+                                                <a href={tool.instagram} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Instagram">
+                                                    <FaInstagram className="w-5 h-5" />
+                                                </a>
+                                            )}
                                             {tool.discord && (
                                                 <a href={tool.discord} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Discord">
                                                     <BsDiscord className="w-5 h-5" />
@@ -281,6 +286,11 @@ function Web3ToolsContentInner() {
                                 {selectedTool.twitter && (
                                     <a href={selectedTool.twitter} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Twitter">
                                         <FaXTwitter className="w-6 h-6" />
+                                    </a>
+                                )}
+                                {selectedTool.instagram && (
+                                    <a href={selectedTool.instagram} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Instagram">
+                                        <FaInstagram className="w-6 h-6" />
                                     </a>
                                 )}
                                 {selectedTool.discord && (

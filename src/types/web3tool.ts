@@ -7,6 +7,7 @@ export interface Web3Tool {
     imageUrl: string;
     website?: string;
     twitter?: string;
+    instagram?: string;
     discord?: string;
     telegram?: string;
 }
