@@ -139,7 +139,7 @@ function Web3ToolsContentInner() {
                                                         </a>
                                                     )}
                                                 </div>
-                                                <span className="text-xs px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                                                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                                     {tool.category}
                                                 </span>
                                             </div>
@@ -258,7 +258,7 @@ function Web3ToolsContentInner() {
                                             </a>
                                         )}
                                     </div>
-                                    <span className="text-sm px-2 py-0.5 rounded-full bg-indigo-500/10 text-indigo-400 border border-indigo-500/20">
+                                    <span className="text-sm px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                         {selectedTool.category}
                                     </span>
                                 </div>
