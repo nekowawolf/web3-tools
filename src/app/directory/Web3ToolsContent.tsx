@@ -13,15 +13,21 @@ import { Web3Tool } from '@/types/web3tool';
 
 const ITEMS_PER_PAGE = 8;
 
-const categories = [
+const categories = [  
     "DEX",
     "CEX",
     "All",
+    "DeFi",
     "Analytics",
     "Bridge",
+    "Explorers",
+    "Airdrop Tracker",
+    "Quests",
+    "Faucets",
     "Wallets",
     "Security",
-    "Airdrop Tracker",
+    "Launchpad",
+    "NFT Marketplace",
     "Research"
 ];
 
@@ -72,7 +78,7 @@ function Web3ToolsContentInner() {
                 </div>
 
                 {/* Categories */}
-                <div className="flex flex-wrap justify-center items-center gap-2 mb-10">
+                <div className="flex flex-wrap justify-center items-center gap-2 mb-10 w-full md:max-w-3xl">
                     {categories.map((category) => (
                         <button
                             key={category}
