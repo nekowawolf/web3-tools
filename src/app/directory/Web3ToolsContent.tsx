@@ -83,10 +83,10 @@ function Web3ToolsContentInner() {
                         <button
                             key={category}
                             onClick={() => handleCategoryChange(category)}
-                            className={`px-4 py-2 rounded-full text-sm font-medium leading-none transition-colors duration-200 ${
+                            className={`px-4 py-2 rounded-full text-sm font-medium leading-none transition-colors duration-200 cursor-pointer ${
                                 activeCategory === category
                                     ? 'bg-blue-600 text-white'
-                                    : 'card-color text-fill-color/70 hover:text-fill-color border border-color'
+                                    : 'card-color text-fill-color/70 border border-color hover:!text-[var(--fill-color)] hover:!border-blue-600'
                             }`}
                         >
                             {category}
@@ -137,7 +137,7 @@ function Web3ToolsContentInner() {
                                                             target="_blank" 
                                                             rel="noopener noreferrer" 
                                                             onClick={(e) => e.stopPropagation()}
-                                                            className="opacity-70 hover:opacity-100 transition-opacity text-fill-color"
+                                                            className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer"
                                                             aria-label="Website"
                                                             title="Visit Website"
                                                         >
@@ -168,22 +168,22 @@ function Web3ToolsContentInner() {
 
                                         <div className="flex items-center gap-4 mt-auto pt-4">
                                             {tool.twitter && (
-                                                <a href={tool.twitter} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Twitter">
+                                                <a href={tool.twitter} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="Twitter">
                                                     <FaXTwitter className="w-5 h-5" />
                                                 </a>
                                             )}
                                             {tool.instagram && (
-                                                <a href={tool.instagram} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Instagram">
+                                                <a href={tool.instagram} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="Instagram">
                                                     <FaInstagram className="w-5 h-5" />
                                                 </a>
                                             )}
                                             {tool.discord && (
-                                                <a href={tool.discord} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Discord">
+                                                <a href={tool.discord} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="Discord">
                                                     <BsDiscord className="w-5 h-5" />
                                                 </a>
                                             )}
                                             {tool.telegram && (
-                                                <a href={tool.telegram} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Telegram">
+                                                <a href={tool.telegram} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="Telegram">
                                                     <FaTelegram className="w-5 h-5" />
                                                 </a>
                                             )}
@@ -222,16 +222,16 @@ function Web3ToolsContentInner() {
             {/* Modal Popup */}
             {selectedTool && (
                 <div 
-                    className="fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
+                    className="cursor-pointer fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
                     onClick={() => setSelectedTool(null)}
                 >
                     <div 
-                        className="glass-card rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-color shadow-2xl relative"
+                        className="cursor-auto glass-card rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-color shadow-2xl relative"
                         onClick={(e) => e.stopPropagation()}
                     >
                         <button 
                             onClick={() => setSelectedTool(null)}
-                            className="absolute top-4 right-4 opacity-70 hover:opacity-100 transition-opacity text-fill-color"
+                            className="absolute top-4 right-4 opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer"
                         >
                             <FaTimes size={20} />
                         </button>
@@ -257,7 +257,7 @@ function Web3ToolsContentInner() {
                                                 href={selectedTool.website} 
                                                 target="_blank" 
                                                 rel="noopener noreferrer" 
-                                                className="opacity-70 hover:opacity-100 transition-opacity text-fill-color"
+                                                className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color"
                                                 title="Visit Website"
                                             >
                                                 <RiExternalLinkLine className="w-6 h-6" />
@@ -290,22 +290,22 @@ function Web3ToolsContentInner() {
 
                             <div className="flex items-center gap-5 pt-6 mt-auto">
                                 {selectedTool.twitter && (
-                                    <a href={selectedTool.twitter} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Twitter">
+                                    <a href={selectedTool.twitter} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Twitter">
                                         <FaXTwitter className="w-6 h-6" />
                                     </a>
                                 )}
                                 {selectedTool.instagram && (
-                                    <a href={selectedTool.instagram} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Instagram">
+                                    <a href={selectedTool.instagram} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Instagram">
                                         <FaInstagram className="w-6 h-6" />
                                     </a>
                                 )}
                                 {selectedTool.discord && (
-                                    <a href={selectedTool.discord} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Discord">
+                                    <a href={selectedTool.discord} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Discord">
                                         <BsDiscord className="w-6 h-6" />
                                     </a>
                                 )}
                                 {selectedTool.telegram && (
-                                    <a href={selectedTool.telegram} target="_blank" rel="noopener noreferrer" className="opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Telegram">
+                                    <a href={selectedTool.telegram} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Telegram">
                                         <FaTelegram className="w-6 h-6" />
                                     </a>
                                 )}
