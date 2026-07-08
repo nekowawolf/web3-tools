@@ -1,9 +1,9 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
 import Web3ToolsContent from "./Web3ToolsContent";
-import { dashboardMetadata } from "@/constants/metadataTemplates";
+import { web3ToolsMetadata } from "@/constants/metadataTemplates";
 
-export const metadata = dashboardMetadata("Web3 Tools", "Web3 Tools Directory");
+export const metadata = web3ToolsMetadata("Web3 Tools", "Web3 Tools Directory");
 
 export default function Web3ToolsPage() {
   return (
