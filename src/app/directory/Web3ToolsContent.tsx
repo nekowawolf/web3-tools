@@ -272,9 +272,11 @@ function Web3ToolsContentInner() {
 
                             <div className="mb-6">
                                 <h4 className="text-sm font-semibold text-fill-color/50 mb-2 uppercase tracking-wider">About</h4>
-                                <p className="text-base text-fill-color/80 leading-relaxed">
-                                    {selectedTool.description}
-                                </p>
+                                <div className="max-h-40 overflow-y-auto pr-2">
+                                    <p className="text-base text-fill-color/80 leading-relaxed whitespace-pre-wrap">
+                                        {selectedTool.description}
+                                    </p>
+                                </div>
                             </div>
 
                             <div className="mb-8">
