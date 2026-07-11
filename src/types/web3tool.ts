@@ -9,5 +9,6 @@ export interface Web3Tool {
     twitter?: string;
     instagram?: string;
     discord?: string;
+    youtube?: string;
     telegram?: string;
 }

@@ -3,7 +3,7 @@
 import { useState, Suspense } from 'react';
 import { FallbackImage } from '@/components/FallbackImage';
 import Pagination from '@/components/Pagination';
-import { FaXTwitter, FaTelegram, FaInstagram } from 'react-icons/fa6';
+import { FaXTwitter, FaTelegram, FaInstagram, FaYoutube } from 'react-icons/fa6';
 import { BsDiscord } from 'react-icons/bs';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import { FaTimes } from 'react-icons/fa';
@@ -177,6 +177,11 @@ function Web3ToolsContentInner() {
                                                     <FaInstagram className="w-5 h-5" />
                                                 </a>
                                             )}
+                                            {tool.youtube && (
+                                                <a href={tool.youtube} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="YouTube">
+                                                    <FaYoutube className="w-5 h-5" />
+                                                </a>
+                                            )}
                                             {tool.discord && (
                                                 <a href={tool.discord} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="Discord">
                                                     <BsDiscord className="w-5 h-5" />
@@ -299,6 +304,11 @@ function Web3ToolsContentInner() {
                                 {selectedTool.instagram && (
                                     <a href={selectedTool.instagram} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Instagram">
                                         <FaInstagram className="w-6 h-6" />
+                                    </a>
+                                )}
+                                {selectedTool.youtube && (
+                                    <a href={selectedTool.youtube} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="YouTube">
+                                        <FaYoutube className="w-6 h-6" />
                                     </a>
                                 )}
                                 {selectedTool.discord && (
