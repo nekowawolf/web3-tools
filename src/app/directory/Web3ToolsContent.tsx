@@ -158,11 +158,16 @@ function Web3ToolsContentInner() {
                                         <div className="mb-4">
                                             <h4 className="text-xs font-semibold text-fill-color/50 mb-2 uppercase tracking-wider">Supported Chains</h4>
                                             <div className="flex flex-wrap gap-1.5">
-                                                {tool.chains && tool.chains.map((chain, index) => (
+                                                {tool.chains && tool.chains.slice(0, 5).map((chain, index) => (
                                                     <span key={index} className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                                         {chain}
                                                     </span>
                                                 ))}
+                                                {tool.chains && tool.chains.length > 5 && (
+                                                    <span className="text-[10px] px-2 py-0.5 rounded-md border border-color bg-card-color text-fill-color/70 font-bold">
+                                                        +{tool.chains.length - 5}
+                                                    </span>
+                                                )}
                                             </div>
                                         </div>
 
@@ -286,7 +291,7 @@ function Web3ToolsContentInner() {
 
                             <div className="mb-8">
                                 <h4 className="text-sm font-semibold text-fill-color/50 mb-3 uppercase tracking-wider">Supported Chains</h4>
-                                <div className="flex flex-wrap gap-2">
+                                <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto custom-scrollbar pr-2">
                                     {selectedTool.chains && selectedTool.chains.map((chain, index) => (
                                         <span key={index} className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
                                             {chain}
