@@ -169,7 +169,19 @@ function Web3ToolsContentInner() {
                                             <div>
                                                 <div className="flex items-center gap-2 mb-1">
                                                     <h3 className="text-lg font-bold text-fill-color leading-tight">
-                                                        {tool.name}
+                                                        {tool.website ? (
+                                                            <a 
+                                                                href={tool.website} 
+                                                                target="_blank" 
+                                                                rel="noopener noreferrer" 
+                                                                onClick={(e) => e.stopPropagation()}
+                                                                className="cursor-pointer transition-colors"
+                                                            >
+                                                                {tool.name}
+                                                            </a>
+                                                        ) : (
+                                                            tool.name
+                                                        )}
                                                     </h3>
                                                     {tool.website && (
                                                         <a 
@@ -300,7 +312,18 @@ function Web3ToolsContentInner() {
                                 <div>
                                     <div className="flex items-center gap-2 mb-2">
                                         <h2 className="text-2xl font-bold text-fill-color leading-tight">
-                                            {selectedTool.name}
+                                            {selectedTool.website ? (
+                                                <a 
+                                                    href={selectedTool.website} 
+                                                    target="_blank" 
+                                                    rel="noopener noreferrer" 
+                                                    className="cursor-pointer transition-colors"
+                                                >
+                                                    {selectedTool.name}
+                                                </a>
+                                            ) : (
+                                                selectedTool.name
+                                            )}
                                         </h2>
                                         {selectedTool.website && (
                                             <a 
