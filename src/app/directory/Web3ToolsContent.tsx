@@ -7,6 +7,7 @@ import { FaXTwitter, FaTelegram, FaInstagram, FaYoutube } from 'react-icons/fa6'
 import { BsDiscord } from 'react-icons/bs';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import { FaTimes } from 'react-icons/fa';
+import { CgClose } from "react-icons/cg";
 import { useWeb3Tools } from '@/hooks/useWeb3Tools';
 import { Spinner } from '@/components/ui/spinner';
 import { Web3Tool } from '@/types/web3tool';
@@ -38,6 +39,7 @@ function Web3ToolsContentInner() {
         error,
         localSearchQuery,
         handleSearchChange,
+        handleClearSearch,
         activeCategory,
         handleCategoryChange,
         currentPage,
@@ -102,8 +104,17 @@ function Web3ToolsContentInner() {
                         placeholder="Search Web3 Tools"
                         value={localSearchQuery}
                         onChange={handleSearchChange}
-                        className="w-full py-3 pl-12 pr-6 rounded-full card-color border border-color focus:outline-none focus:border-blue-500 text-fill-color placeholder:text-fill-color/50 transition-colors"
+                        className="w-full py-3 pl-12 pr-12 rounded-full card-color border border-color focus:outline-none focus:border-blue-500 text-fill-color placeholder:text-fill-color/50 transition-colors"
                     />
+                    {localSearchQuery && (
+                        <button
+                            onClick={handleClearSearch}
+                            className="absolute right-4 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer"
+                            aria-label="Clear search"
+                        >
+                            <CgClose className="w-5 h-5" />
+                        </button>
+                    )}
                 </div>
 
                 {/* Categories */}
