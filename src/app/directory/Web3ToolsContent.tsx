@@ -1,5 +1,6 @@
 'use client';
 
+import NwwOneeAIChat from "@/components/NwwOneeAIChat";
 import { useState, Suspense, useRef } from 'react';
 import { FallbackImage } from '@/components/FallbackImage';
 import Pagination from '@/components/Pagination';
@@ -406,6 +407,7 @@ function Web3ToolsContentInner() {
                 </div>
             )}
 
+            <NwwOneeAIChat />
         </div>
     );
 }
