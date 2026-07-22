@@ -1,7 +1,7 @@
 'use client';
 
 import NwwOneeAIChat from "@/components/NwwOneeAIChat";
-import { useState, Suspense, useRef } from 'react';
+import { useState, Suspense, useRef, useEffect } from 'react';
 import { FallbackImage } from '@/components/FallbackImage';
 import Pagination from '@/components/Pagination';
 import { FaXTwitter, FaTelegram, FaInstagram, FaYoutube } from 'react-icons/fa6';
@@ -53,9 +53,37 @@ function Web3ToolsContentInner() {
     const [selectedTool, setSelectedTool] = useState<Web3Tool | null>(null);
 
     const scrollRef = useRef<HTMLDivElement>(null);
+    const fadeRef = useRef<HTMLDivElement>(null);
     const [isDragging, setIsDragging] = useState(false);
     const [startX, setStartX] = useState(0);
     const [scrollLeft, setScrollLeft] = useState(0);
+
+    useEffect(() => {
+        const checkOverflow = () => {
+            if (scrollRef.current && fadeRef.current) {
+                const { scrollWidth, clientWidth, scrollLeft } = scrollRef.current;
+                const hasMore = Math.ceil(scrollLeft + clientWidth) < scrollWidth - 1;
+                fadeRef.current.style.opacity = hasMore ? '1' : '0';
+                fadeRef.current.style.visibility = hasMore ? 'visible' : 'hidden';
+            }
+        };
+
+        const timeoutId = setTimeout(checkOverflow, 50);
+        
+        window.addEventListener('resize', checkOverflow);
+        const scrollElement = scrollRef.current;
+        if (scrollElement) {
+            scrollElement.addEventListener('scroll', checkOverflow);
+        }
+        
+        return () => {
+            clearTimeout(timeoutId);
+            window.removeEventListener('resize', checkOverflow);
+            if (scrollElement) {
+                scrollElement.removeEventListener('scroll', checkOverflow);
+            }
+        };
+    }, [categories.length]);
 
     const onMouseDown = (e: React.MouseEvent) => {
         setIsDragging(true);
@@ -143,7 +171,11 @@ function Web3ToolsContentInner() {
                         ))}
                     </div>
                     {/* Fade indicator */}
-                    <div className="absolute right-0 top-0 h-8 w-12 bg-gradient-to-l from-blue-600/20 to-transparent pointer-events-none" />
+                    <div 
+                        ref={fadeRef}
+                        className="absolute right-0 top-0 h-8 w-12 bg-gradient-to-l from-blue-600/20 to-transparent pointer-events-none transition-opacity duration-200"
+                        style={{ opacity: 0, visibility: 'hidden' }}
+                    />
                 </div>
 
                 {/* Content Area */}
