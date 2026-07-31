@@ -1,6 +1,7 @@
 'use client';
 
-import NwwOneeAIChat from "@/components/NwwOneeAIChat";
+import NwwOneeAIChat, { chatStore } from "@/components/NwwOneeAIChat";
+import { CiBookmark } from "react-icons/ci";
 import { useState, Suspense, useRef, useEffect } from 'react';
 import { FallbackImage } from '@/components/FallbackImage';
 import Pagination from '@/components/Pagination';
@@ -241,9 +242,22 @@ function Web3ToolsContentInner() {
                                                         </a>
                                                     )}
                                                 </div>
-                                                <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                                                    {tool.category}
-                                                </span>
+                                                <div className="flex items-center gap-2">
+                                                    <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                                        {tool.category}
+                                                    </span>
+                                                    <button 
+                                                        onClick={(e) => {
+                                                            e.stopPropagation();
+                                                            chatStore.setIsOpen(true);
+                                                            chatStore.setActiveView('user');
+                                                        }}
+                                                        className="cursor-pointer opacity-70 hover:opacity-100 transition-all text-fill-color"
+                                                        title="Bookmark"
+                                                    >
+                                                        <CiBookmark className="w-5 h-5" />
+                                                    </button>
+                                                </div>
                                             </div>
                                         </div>
                                         
@@ -381,9 +395,22 @@ function Web3ToolsContentInner() {
                                             </a>
                                         )}
                                     </div>
-                                    <span className="text-sm px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                                        {selectedTool.category}
-                                    </span>
+                                    <div className="flex items-center gap-2">
+                                        <span className="text-sm px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+                                            {selectedTool.category}
+                                        </span>
+                                        <button 
+                                            onClick={(e) => {
+                                                e.stopPropagation();
+                                                chatStore.setIsOpen(true);
+                                                chatStore.setActiveView('user');
+                                            }}
+                                            className="cursor-pointer opacity-70 hover:opacity-100 transition-all text-fill-color"
+                                            title="Bookmark"
+                                        >
+                                            <CiBookmark className="w-6 h-6" />
+                                        </button>
+                                    </div>
                                 </div>
                             </div>
 
