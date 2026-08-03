@@ -204,7 +204,7 @@ function Web3ToolsContentInner() {
                                         <div className="flex items-center gap-4 mb-4">
                                             <div className="w-16 h-16 relative rounded-xl overflow-hidden bg-card-color shrink-0">
                                                 <FallbackImage
-                                                    src={tool.imageUrl}
+                                                    src={tool.image_url}
                                                     alt={tool.name}
                                                     fill
                                                     className="object-cover"
@@ -360,7 +360,7 @@ function Web3ToolsContentInner() {
                             <div className="flex items-center gap-4 mb-6">
                                 <div className="w-20 h-20 relative rounded-xl overflow-hidden bg-card-color2 shrink-0">
                                     <FallbackImage
-                                        src={selectedTool.imageUrl}
+                                        src={selectedTool.image_url}
                                         alt={selectedTool.name}
                                         fill
                                         className="object-cover"
