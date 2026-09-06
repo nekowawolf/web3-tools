@@ -2,6 +2,7 @@ import { useState, useEffect, useMemo } from 'react';
 import { useSearchParams, useRouter, usePathname } from 'next/navigation';
 import { Web3Tool } from '@/types/web3tool';
 import { fetchWeb3ToolsData } from '@/services/web3ToolService';
+import Fuse from 'fuse.js';
 
 let isInitialLoad = true;
 
@@ -17,6 +18,40 @@ export const useWeb3Tools = (itemsPerPage: number = 8) => {
     const [localSearchQuery, setLocalSearchQuery] = useState(searchParams.get('q') || '');
     const [localCategory, setLocalCategory] = useState(searchParams.get('category') || 'All');
     const [localPage, setLocalPage] = useState(Number(searchParams.get('page')) || 1);
+    const [suggestion, setSuggestion] = useState<string | null>(null);
+
+    useEffect(() => {
+        if (!localSearchQuery || toolsData.length === 0) {
+            setSuggestion(null);
+            return;
+        }
+
+        const exactMatchExists = toolsData.some(t => 
+            t.name.toLowerCase().includes(localSearchQuery.toLowerCase())
+        );
+
+        if (exactMatchExists) {
+            setSuggestion(null);
+            return;
+        }
+
+        const fuse = new Fuse(toolsData, {
+            keys: ['name'],
+            threshold: 0.4,
+        });
+
+        const results = fuse.search(localSearchQuery);
+        if (results.length > 0) {
+            const bestMatch = results[0].item.name;
+            if (bestMatch.toLowerCase() !== localSearchQuery.toLowerCase()) {
+                setSuggestion(bestMatch);
+            } else {
+                setSuggestion(null);
+            }
+        } else {
+            setSuggestion(null);
+        }
+    }, [localSearchQuery, toolsData]);
 
     useEffect(() => {
         const loadData = async () => {
@@ -151,6 +186,11 @@ export const useWeb3Tools = (itemsPerPage: number = 8) => {
         setLocalPage(1);
     };
 
+    const handleSuggestionClick = (newQuery: string) => {
+        setLocalSearchQuery(newQuery);
+        setLocalPage(1);
+    };
+
     return {
         displayedTools,
         loading,
@@ -163,6 +203,8 @@ export const useWeb3Tools = (itemsPerPage: number = 8) => {
         currentPage: validCurrentPage,
         handlePageChange,
         totalPages,
-        totalItems
+        totalItems,
+        suggestion,
+        handleSuggestionClick
     };
 };
