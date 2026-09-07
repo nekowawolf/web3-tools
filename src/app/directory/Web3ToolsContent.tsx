@@ -10,6 +10,7 @@ import { BsDiscord } from 'react-icons/bs';
 import { RiExternalLinkLine } from 'react-icons/ri';
 import { FaTimes } from 'react-icons/fa';
 import { CgClose } from "react-icons/cg";
+import { GoSearch } from "react-icons/go";
 import { useWeb3Tools } from '@/hooks/useWeb3Tools';
 import { Spinner } from '@/components/ui/spinner';
 import { Web3Tool } from '@/types/web3tool';
@@ -125,18 +126,14 @@ function Web3ToolsContentInner() {
                 </div>
 
                 {/* Search Bar */}
-                <div className="w-full max-w-xl mb-6 relative">
-                   <div className="absolute left-4 top-1/2 -translate-y-1/2 text-fill-color/50">
-                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
-                                <path strokeLinecap="round" strokeLinejoin="round" d="m21 21-5.197-5.197m0 0A7.5 7.5 0 1 0 5.196 5.196a7.5 7.5 0 0 0 10.607 10.607Z" />
-                            </svg>
-                        </div>
+                <div className="w-full max-w-xl mb-6 relative search-container">
+                    <GoSearch className="search-icon absolute left-4 top-1/2 -translate-y-1/2 text-fill-color w-5 h-5" />
                     <input
                         type="text"
                         placeholder="Search Web3 Tools"
                         value={localSearchQuery}
                         onChange={handleSearchChange}
-                        className="w-full py-3 pl-12 pr-12 rounded-full card-color border border-color focus:outline-none focus:border-blue-500 text-fill-color placeholder:text-fill-color/50 transition-colors"
+                        className="w-full py-3 pl-12 pr-12 rounded-full card-color border border-color text-fill-color placeholder:text-fill-color/50 custom-search-focus"
                     />
                     {localSearchQuery && (
                         <button
