@@ -1,6 +1,6 @@
 'use client';
 
-import { useState, useRef, useEffect, useCallback, useMemo, memo, useSyncExternalStore } from 'react';
+import { useRef, useEffect, useCallback, useMemo, memo, useSyncExternalStore } from 'react';
 import { CgClose } from 'react-icons/cg';
 import { FaArrowUp } from 'react-icons/fa';
 import { HiOutlineUserCircle } from 'react-icons/hi2';
@@ -61,16 +61,6 @@ export const chatStore = {
     chatStore._emit();
   },
 };
-
-function useChatSelector<T>(selector: (s: typeof chatStore._state) => T): T {
-  const selectorStable = useCallback(selector, []);
-  const snap = useSyncExternalStore(
-    chatStore.subscribe,
-    () => selectorStable(chatStore.getSnapshot()),
-    () => selectorStable(chatStore.getSnapshot())
-  );
-  return snap;
-}
 
 const chatPanelVariants = {
   hidden: { opacity: 0, y: 32, scale: 0.95 },
@@ -186,11 +176,11 @@ const StarterButtons = memo(function StarterButtons({ onSend }: { onSend: (t:str
 });
 
 export default function NwwOneeAIChat() {
-  const isOpen = useChatSelector(s => s.isOpen);
-  const messages = useChatSelector(s => s.messages);
-  const inputValue = useChatSelector(s => s.inputValue);
-  const isTyping = useChatSelector(s => s.isTyping);
-  const activeView = useChatSelector(s => s.activeView);
+  const { isOpen, messages, inputValue, isTyping, activeView } = useSyncExternalStore(
+    chatStore.subscribe,
+    chatStore.getSnapshot,
+    chatStore.getSnapshot
+  );
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
 

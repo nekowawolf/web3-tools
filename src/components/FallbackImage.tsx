@@ -1,6 +1,6 @@
 ﻿'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 
 export const FALLBACK_IMAGE_URL = 'https://cdn.nekowawolf.xyz/image/2026/1787424585_image-unavailable.webp';
 
@@ -12,12 +12,14 @@ export interface FallbackImageProps extends React.ImgHTMLAttributes<HTMLImageEle
     quality?: number | string;
 }
 
-export const FallbackImage = ({ src, alt, fill, sizes, unoptimized, priority, quality, className, ...props }: FallbackImageProps) => {
-    const [imgSrc, setImgSrc] = useState(src);
+export const FallbackImage = ({ src, alt, fill, sizes, className, ...props }: FallbackImageProps) => {
+    const [failedSrc, setFailedSrc] = useState<FallbackImageProps['src']>();
+    const imgSrc = src && src !== failedSrc ? src : FALLBACK_IMAGE_URL;
+    const nativeImageProps = { ...props };
 
-    useEffect(() => {
-        setImgSrc(src);
-    }, [src]);
+    delete nativeImageProps.unoptimized;
+    delete nativeImageProps.priority;
+    delete nativeImageProps.quality;
 
     const combinedClassName = fill 
         ? ('absolute inset-0 w-full h-full ' + (className || '')).trim()
@@ -25,26 +27,28 @@ export const FallbackImage = ({ src, alt, fill, sizes, unoptimized, priority, qu
 
     return (
         <img
-            {...props}
+            {...nativeImageProps}
             sizes={sizes}
             className={combinedClassName}
-            src={imgSrc ? (imgSrc as string) : FALLBACK_IMAGE_URL}
+            src={imgSrc}
             alt={alt || 'Image'}
             onError={() => {
-                if (imgSrc !== FALLBACK_IMAGE_URL) {
-                    setImgSrc(FALLBACK_IMAGE_URL);
+                if (src && src !== FALLBACK_IMAGE_URL) {
+                    setFailedSrc(src);
                 }
             }}
         />
     );
 };
 
-export const FallbackNativeImage = ({ src, alt, fill, sizes, unoptimized, priority, quality, className, ...props }: FallbackImageProps) => {
-    const [imgSrc, setImgSrc] = useState(src);
+export const FallbackNativeImage = ({ src, alt, fill, sizes, className, ...props }: FallbackImageProps) => {
+    const [failedSrc, setFailedSrc] = useState<FallbackImageProps['src']>();
+    const imgSrc = src && src !== failedSrc ? src : FALLBACK_IMAGE_URL;
+    const nativeImageProps = { ...props };
 
-    useEffect(() => {
-        setImgSrc(src);
-    }, [src]);
+    delete nativeImageProps.unoptimized;
+    delete nativeImageProps.priority;
+    delete nativeImageProps.quality;
 
     const combinedClassName = fill 
         ? ('absolute inset-0 w-full h-full ' + (className || '')).trim()
@@ -52,14 +56,14 @@ export const FallbackNativeImage = ({ src, alt, fill, sizes, unoptimized, priori
 
     return (
         <img
-            {...props}
+            {...nativeImageProps}
             sizes={sizes}
             className={combinedClassName}
-            src={imgSrc ? (imgSrc as string) : FALLBACK_IMAGE_URL}
+            src={imgSrc}
             alt={alt || 'Image'}
-            onError={(e) => {
-                if (imgSrc !== FALLBACK_IMAGE_URL) {
-                    setImgSrc(FALLBACK_IMAGE_URL);
+            onError={() => {
+                if (src && src !== FALLBACK_IMAGE_URL) {
+                    setFailedSrc(src);
                 }
             }}
         />

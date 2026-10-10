@@ -1,39 +1,46 @@
 'use client';
 
-import NwwOneeAIChat, { chatStore } from "@/components/NwwOneeAIChat";
-import { CiBookmark } from "react-icons/ci";
-import { useState, Suspense, useRef, useEffect } from 'react';
+import { Suspense, useEffect, useRef, useState } from 'react';
+import Link from 'next/link';
+import { CgClose } from 'react-icons/cg';
+import { GoSearch } from 'react-icons/go';
 import { FallbackImage } from '@/components/FallbackImage';
+import NwwOneeAIChat from '@/components/NwwOneeAIChat';
 import Pagination from '@/components/Pagination';
-import { FaXTwitter, FaTelegram, FaInstagram, FaYoutube } from 'react-icons/fa6';
-import { BsDiscord } from 'react-icons/bs';
-import { RiExternalLinkLine } from 'react-icons/ri';
-import { FaTimes } from 'react-icons/fa';
-import { CgClose } from "react-icons/cg";
-import { GoSearch } from "react-icons/go";
-import { useWeb3Tools } from '@/hooks/useWeb3Tools';
 import { Spinner } from '@/components/ui/spinner';
-import { Web3Tool } from '@/types/web3tool';
+import { useWeb3Tools } from '@/hooks/useWeb3Tools';
 
 const ITEMS_PER_PAGE = 8;
 
-const categories = [  
-    "DEX",
-    "CEX",
-    "All",
-    "DeFi",
-    "Analytics",
-    "Bridge",
-    "Explorers",
-    "Airdrop Tracker",
-    "Quests",
-    "Faucets",
-    "Wallets",
-    "Security",
-    "Launchpad",
-    "NFT Marketplace",
-    "Research"
+const categories = [
+    'DEX',
+    'CEX',
+    'All',
+    'DeFi',
+    'Analytics',
+    'Bridge',
+    'Explorers',
+    'Airdrop Tracker',
+    'Quests',
+    'Faucets',
+    'Wallets',
+    'Security',
+    'Launchpad',
+    'NFT Marketplace',
+    'Research',
 ];
+
+export default function Web3ToolsContent() {
+    return (
+        <Suspense fallback={
+            <div className="flex min-h-[50vh] items-center justify-center">
+                <Spinner className="size-10 text-blue-500" />
+            </div>
+        }>
+            <Web3ToolsContentInner />
+        </Suspense>
+    );
+}
 
 function Web3ToolsContentInner() {
     const {
@@ -50,11 +57,8 @@ function Web3ToolsContentInner() {
         totalPages,
         totalItems,
         suggestion,
-        handleSuggestionClick
+        handleSuggestionClick,
     } = useWeb3Tools(ITEMS_PER_PAGE);
-
-    // Modal state
-    const [selectedTool, setSelectedTool] = useState<Web3Tool | null>(null);
 
     const scrollRef = useRef<HTMLDivElement>(null);
     const fadeRef = useRef<HTMLDivElement>(null);
@@ -64,93 +68,80 @@ function Web3ToolsContentInner() {
 
     useEffect(() => {
         const checkOverflow = () => {
-            if (scrollRef.current && fadeRef.current) {
-                const { scrollWidth, clientWidth, scrollLeft } = scrollRef.current;
-                const hasMore = Math.ceil(scrollLeft + clientWidth) < scrollWidth - 1;
-                fadeRef.current.style.opacity = hasMore ? '1' : '0';
-                fadeRef.current.style.visibility = hasMore ? 'visible' : 'hidden';
-            }
+            if (!scrollRef.current || !fadeRef.current) return;
+
+            const { scrollWidth, clientWidth, scrollLeft: currentScrollLeft } = scrollRef.current;
+            const hasMore = Math.ceil(currentScrollLeft + clientWidth) < scrollWidth - 1;
+            fadeRef.current.style.opacity = hasMore ? '1' : '0';
+            fadeRef.current.style.visibility = hasMore ? 'visible' : 'hidden';
         };
 
-        const timeoutId = setTimeout(checkOverflow, 50);
-        
-        window.addEventListener('resize', checkOverflow);
+        const timeoutId = window.setTimeout(checkOverflow, 50);
         const scrollElement = scrollRef.current;
-        if (scrollElement) {
-            scrollElement.addEventListener('scroll', checkOverflow);
-        }
-        
-        return () => {
-            clearTimeout(timeoutId);
-            window.removeEventListener('resize', checkOverflow);
-            if (scrollElement) {
-                scrollElement.removeEventListener('scroll', checkOverflow);
-            }
-        };
-    }, [categories.length]);
 
-    const onMouseDown = (e: React.MouseEvent) => {
+        window.addEventListener('resize', checkOverflow);
+        scrollElement?.addEventListener('scroll', checkOverflow);
+
+        return () => {
+            window.clearTimeout(timeoutId);
+            window.removeEventListener('resize', checkOverflow);
+            scrollElement?.removeEventListener('scroll', checkOverflow);
+        };
+    }, []);
+
+    const onMouseDown = (event: React.MouseEvent) => {
         setIsDragging(true);
         if (scrollRef.current) {
-            setStartX(e.pageX - scrollRef.current.offsetLeft);
+            setStartX(event.pageX - scrollRef.current.offsetLeft);
             setScrollLeft(scrollRef.current.scrollLeft);
         }
     };
 
-    const onMouseLeave = () => {
-        setIsDragging(false);
-    };
-
-    const onMouseUp = () => {
-        setIsDragging(false);
-    };
-
-    const onMouseMove = (e: React.MouseEvent) => {
+    const onMouseMove = (event: React.MouseEvent) => {
         if (!isDragging || !scrollRef.current) return;
-        e.preventDefault();
-        const x = e.pageX - scrollRef.current.offsetLeft;
-        const walk = (x - startX);
-        scrollRef.current.scrollLeft = scrollLeft - walk;
+        event.preventDefault();
+        const x = event.pageX - scrollRef.current.offsetLeft;
+        scrollRef.current.scrollLeft = scrollLeft - (x - startX);
     };
 
     return (
-        <div className="min-h-screen body-color text-fill-color p-8 pt-12 font-sans">
-            <div className="max-w-7xl mx-auto flex flex-col items-center">
-                <div className="w-full max-w-2xl mb-8 text-center">
-                    <h1 className="text-3xl font-bold mb-2">
-                        Web3 Tools Directory
-                    </h1>
-                    <p className="text-fill-color/70 max-w-md mx-auto">
-                        Explore our curated collection of essential crypto and Web3 platforms to elevate your journey.
+        <div className="min-h-screen body-color p-4 pt-10 text-fill-color sm:p-8 sm:pt-12 font-sans">
+            <div className="mx-auto flex max-w-7xl flex-col items-center">
+                <div className="mb-8 w-full max-w-2xl text-center">
+                    <h1 className="mb-2 text-3xl font-bold">Web3 Tools List</h1>
+                    <p className="mx-auto max-w-md text-sm leading-relaxed text-fill-color/70 sm:text-base">
+                        Explore our curated collection of essential crypto and Web3 tools for every chain.
                     </p>
                 </div>
 
-                {/* Search Bar */}
-                <div className="w-full max-w-xl mb-6 relative search-container">
-                    <GoSearch className="search-icon absolute left-4 top-1/2 -translate-y-1/2 text-fill-color w-5 h-5" />
+                <div className="search-container relative mb-6 w-full max-w-xl">
+                    <GoSearch className="search-icon absolute left-4 top-1/2 size-5 -translate-y-1/2 text-fill-color" />
                     <input
                         type="text"
+                        aria-label="Search Web3 tools"
                         placeholder="Search Web3 Tools"
                         value={localSearchQuery}
                         onChange={handleSearchChange}
-                        className="w-full py-3 pl-12 pr-12 rounded-full card-color border border-color text-fill-color placeholder:text-fill-color/50 custom-search-focus"
+                        className="custom-search-focus w-full rounded-full border border-color card-color py-3 pl-12 pr-12 text-fill-color placeholder:text-fill-color/50"
                     />
                     {localSearchQuery && (
                         <button
+                            type="button"
                             onClick={handleClearSearch}
-                            className="absolute right-4 top-1/2 -translate-y-1/2 opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer"
+                            className="absolute right-4 top-1/2 -translate-y-1/2 cursor-pointer text-fill-color opacity-70 transition-opacity hover:opacity-100"
                             aria-label="Clear search"
                         >
-                            <CgClose className="w-5 h-5" />
+                            <CgClose className="size-5" />
                         </button>
                     )}
-                    
-                    <div className="absolute left-0 top-full pt-1 pl-5 w-full text-left z-10 pointer-events-none">
-                        <div className={`text-xs text-fill-color/70 transition-opacity duration-300 pointer-events-auto ${suggestion ? 'opacity-100 visible' : 'opacity-0 invisible'}`}>
+
+                    <div className="pointer-events-none absolute left-0 top-full z-10 w-full pl-5 pt-1 text-left">
+                        <div className={`pointer-events-auto text-xs text-fill-color/70 transition-opacity duration-300 ${suggestion ? 'visible opacity-100' : 'invisible opacity-0'}`}>
                             Did you mean:{' '}
-                            <button 
-                                onClick={() => suggestion && handleSuggestionClick(suggestion)} 
-                                className="font-semibold text-blue-500 hover:underline cursor-pointer"
+                            <button
+                                type="button"
+                                onClick={() => suggestion && handleSuggestionClick(suggestion)}
+                                className="cursor-pointer font-semibold text-blue-500 hover:underline"
                             >
                                 {suggestion}
                             </button>
@@ -159,62 +150,61 @@ function Web3ToolsContentInner() {
                     </div>
                 </div>
 
-                {/* Categories */}
-                <div className="relative w-full md:max-w-3xl mb-10 overflow-hidden">
-                    <div 
+                <div className="relative mx-auto mb-10 w-full overflow-hidden md:max-w-3xl">
+                    <div
                         ref={scrollRef}
                         onMouseDown={onMouseDown}
-                        onMouseLeave={onMouseLeave}
-                        onMouseUp={onMouseUp}
+                        onMouseLeave={() => setIsDragging(false)}
+                        onMouseUp={() => setIsDragging(false)}
                         onMouseMove={onMouseMove}
-                        className={`flex overflow-x-auto gap-2 items-center md:pb-3 max-md:[&::-webkit-scrollbar]:hidden max-md:[-ms-overflow-style:none] max-md:[scrollbar-width:none] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:bg-blue-500/30 [&::-webkit-scrollbar-thumb]:rounded-full hover:[&::-webkit-scrollbar-thumb]:bg-blue-500/60 ${isDragging ? 'cursor-grabbing select-none' : 'cursor-grab'}`}
+                        className={`flex items-center gap-2 overflow-x-auto md:pb-3 max-md:[&::-webkit-scrollbar]:hidden max-md:[-ms-overflow-style:none] max-md:[scrollbar-width:none] [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-blue-500/30 hover:[&::-webkit-scrollbar-thumb]:bg-blue-500/60 ${isDragging ? 'cursor-grabbing select-none' : 'cursor-grab'}`}
                     >
                         {categories.map((category) => (
                             <button
+                                type="button"
                                 key={category}
                                 onClick={() => handleCategoryChange(category)}
-                                className={`shrink-0 px-4 py-2 rounded-full text-sm font-medium leading-none transition-colors duration-200 cursor-pointer ${
+                                className={`shrink-0 cursor-pointer rounded-full px-4 py-2 text-sm font-medium leading-none transition-colors duration-200 ${
                                     activeCategory === category
                                         ? 'bg-blue-600 text-white'
-                                        : 'card-color text-fill-color/70 border border-color hover:!text-[var(--fill-color)] hover:!border-blue-600'
+                                        : 'border border-color card-color text-fill-color/70 hover:!border-blue-600 hover:!text-[var(--fill-color)]'
                                 }`}
                             >
                                 {category}
                             </button>
                         ))}
                     </div>
-                    {/* Fade indicator */}
-                    <div 
+                    <div
                         ref={fadeRef}
-                        className="absolute right-0 top-0 h-8 w-12 bg-gradient-to-l from-blue-600/20 to-transparent pointer-events-none transition-opacity duration-200"
+                        className="pointer-events-none absolute right-0 top-0 h-8 w-12 bg-gradient-to-l from-blue-600/20 to-transparent transition-opacity duration-200"
                         style={{ opacity: 0, visibility: 'hidden' }}
                     />
                 </div>
 
-                {/* Content Area */}
                 {loading ? (
-                    <div className="flex justify-center p-12 w-full max-w-7xl">
-                        <Spinner className="text-blue-500 size-10" />
+                    <div className="flex w-full max-w-7xl justify-center p-12">
+                        <Spinner className="size-10 text-blue-500" />
                     </div>
                 ) : (
-                    <div className="flex flex-col gap-4 w-full items-center">
+                    <div className="flex w-full flex-col items-center gap-4">
                         {error && (
-                            <div className="text-red-500 text-center py-4 bg-red-500/10 rounded-lg border border-red-500/20 w-full max-w-7xl mb-4">
+                            <div className="mb-4 w-full max-w-5xl rounded-lg border border-red-500/20 bg-red-500/10 py-4 text-center text-red-500">
                                 Error loading Web3 tools: {error}
                             </div>
                         )}
 
-                        {/* Tools Grid */}
-                        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6 w-full max-w-7xl">
+                        <div className="grid w-full max-w-5xl grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-6 lg:grid-cols-4">
                             {displayedTools.length > 0 ? (
-                                displayedTools.map((tool) => (
-                                    <div
-                                        key={tool._id}
-                                        onClick={() => setSelectedTool(tool)}
-                                        className="glass-card rounded-2xl p-5 flex flex-col h-full card-hover transition-all cursor-pointer"
-                                    >
-                                        <div className="flex items-center gap-4 mb-4">
-                                            <div className="w-16 h-16 relative rounded-xl overflow-hidden bg-card-color shrink-0">
+                                displayedTools.map((tool) => {
+                                    const chains = tool.chains ?? [];
+
+                                    return (
+                                        <Link
+                                            href={`/directory/${tool._id}`}
+                                            key={tool._id}
+                                            className="glass-card card-hover group flex h-full min-w-0 flex-col items-center rounded-2xl p-4 text-center sm:p-5"
+                                        >
+                                            <div className="relative mx-auto mb-4 aspect-square w-full max-w-[72px] overflow-hidden rounded-xl bg-card-color transition-transform group-hover:scale-105 sm:max-w-[80px]">
                                                 <FallbackImage
                                                     src={tool.image_url}
                                                     alt={tool.name}
@@ -223,108 +213,34 @@ function Web3ToolsContentInner() {
                                                     unoptimized
                                                 />
                                             </div>
-                                            <div>
-                                                <div className="flex items-center gap-2 mb-1">
-                                                    <h3 className="text-lg font-bold text-fill-color leading-tight">
-                                                        {tool.website ? (
-                                                            <a 
-                                                                href={tool.website} 
-                                                                target="_blank" 
-                                                                rel="noopener noreferrer" 
-                                                                onClick={(e) => e.stopPropagation()}
-                                                                className="cursor-pointer transition-colors"
-                                                            >
-                                                                {tool.name}
-                                                            </a>
-                                                        ) : (
-                                                            tool.name
-                                                        )}
-                                                    </h3>
-                                                    {tool.website && (
-                                                        <a 
-                                                            href={tool.website} 
-                                                            target="_blank" 
-                                                            rel="noopener noreferrer" 
-                                                            onClick={(e) => e.stopPropagation()}
-                                                            className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer"
-                                                            aria-label="Website"
-                                                            title="Visit Website"
-                                                        >
-                                                            <RiExternalLinkLine className="w-5 h-5" />
-                                                        </a>
-                                                    )}
-                                                </div>
-                                                <div className="flex items-center gap-2">
-                                                    <span className="text-xs px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
+
+                                            <h2 className="mb-2 w-full truncate text-base font-bold text-fill-color sm:text-lg">
+                                                {tool.name}
+                                            </h2>
+
+                                            <div className="flex w-full flex-wrap justify-center gap-1.5">
+                                                {tool.category && (
+                                                    <span className="max-w-full truncate rounded-full border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[10px] text-blue-400">
                                                         {tool.category}
                                                     </span>
-                                                    <button 
-                                                        onClick={(e) => {
-                                                            e.stopPropagation();
-                                                            chatStore.setIsOpen(true);
-                                                            chatStore.setActiveView('user');
-                                                        }}
-                                                        className="cursor-pointer opacity-70 hover:opacity-100 transition-all text-fill-color"
-                                                        title="Bookmark"
-                                                    >
-                                                        <CiBookmark className="w-5 h-5" />
-                                                    </button>
-                                                </div>
-                                            </div>
-                                        </div>
-                                        
-                                        <p className="text-sm text-fill-color/70 mb-4 flex-grow line-clamp-3">
-                                            {tool.description}
-                                        </p>
-
-                                        <div className="mb-4">
-                                            <h4 className="text-xs font-semibold text-fill-color/50 mb-2 uppercase tracking-wider">Supported Chains</h4>
-                                            <div className="flex flex-wrap gap-1.5">
-                                                {tool.chains && tool.chains.slice(0, 5).map((chain, index) => (
-                                                    <span key={index} className="text-[10px] px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                                                        {chain}
+                                                )}
+                                                {chains.length > 0 && (
+                                                    <span className="max-w-[92px] truncate rounded-md border border-color bg-card-color px-2 py-0.5 text-[10px] text-fill-color/70">
+                                                        {chains[0]}
                                                     </span>
-                                                ))}
-                                                {tool.chains && tool.chains.length > 5 && (
-                                                    <span className="text-[10px] px-2 py-0.5 rounded-md border border-color bg-card-color text-fill-color/70 font-bold">
-                                                        +{tool.chains.length - 5}
+                                                )}
+                                                {chains.length > 1 && (
+                                                    <span className="rounded-md border border-color bg-card-color px-2 py-0.5 text-[10px] font-bold text-fill-color/70">
+                                                        +{chains.length - 1}
                                                     </span>
                                                 )}
                                             </div>
-                                        </div>
-
-                                        <div className="flex items-center gap-4 mt-auto pt-4">
-                                            {tool.twitter && (
-                                                <a href={tool.twitter} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="Twitter">
-                                                    <FaXTwitter className="w-5 h-5" />
-                                                </a>
-                                            )}
-                                            {tool.instagram && (
-                                                <a href={tool.instagram} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="Instagram">
-                                                    <FaInstagram className="w-5 h-5" />
-                                                </a>
-                                            )}
-                                            {tool.youtube && (
-                                                <a href={tool.youtube} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="YouTube">
-                                                    <FaYoutube className="w-5 h-5" />
-                                                </a>
-                                            )}
-                                            {tool.discord && (
-                                                <a href={tool.discord} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="Discord">
-                                                    <BsDiscord className="w-5 h-5" />
-                                                </a>
-                                            )}
-                                            {tool.telegram && (
-                                                <a href={tool.telegram} target="_blank" rel="noopener noreferrer" onClick={(e) => e.stopPropagation()} className="opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer" aria-label="Telegram">
-                                                    <FaTelegram className="w-5 h-5" />
-                                                </a>
-                                            )}
-                                        </div>
-                                    </div>
-                                ))
+                                        </Link>
+                                    );
+                                })
                             ) : (
-                                <div className="col-span-full w-full flex-col flex gap-4">
-                                    <div className="text-center py-1">
+                                <div className="col-span-full flex w-full flex-col gap-4">
+                                    <div className="py-1 text-center">
                                         <FallbackImage
                                             src="https://cdn.nekowawolf.xyz/image/2026/1787422427_nwwonee_search.webp"
                                             alt="No data found"
@@ -332,13 +248,12 @@ function Web3ToolsContentInner() {
                                             height={160}
                                             className="mx-auto"
                                         />
-                                        <p className="text-fill-color/50 -mt-4">No data available.</p>
+                                        <p className="-mt-4 text-fill-color/50">No data available.</p>
                                     </div>
                                 </div>
                             )}
                         </div>
 
-                        {/* Pagination */}
                         {displayedTools.length > 0 && totalPages > 1 && (
                             <Pagination
                                 currentPage={currentPage}
@@ -350,147 +265,7 @@ function Web3ToolsContentInner() {
                     </div>
                 )}
             </div>
-
-            {/* Modal Popup */}
-            {selectedTool && (
-                <div 
-                    className="cursor-pointer fixed inset-0 z-[60] flex items-center justify-center bg-black/60 backdrop-blur-sm p-4"
-                    onClick={() => setSelectedTool(null)}
-                >
-                    <div 
-                        className="cursor-auto glass-card rounded-2xl max-w-lg w-full max-h-[90vh] overflow-y-auto border border-color shadow-2xl relative"
-                        onClick={(e) => e.stopPropagation()}
-                    >
-                        <button 
-                            onClick={() => setSelectedTool(null)}
-                            className="absolute top-4 right-4 opacity-70 hover:opacity-100 transition-opacity text-fill-color cursor-pointer"
-                        >
-                            <FaTimes size={20} />
-                        </button>
-                        
-                        <div className="p-6 sm:p-8">
-                            <div className="flex items-center gap-4 mb-6">
-                                <div className="w-20 h-20 relative rounded-xl overflow-hidden bg-card-color2 shrink-0">
-                                    <FallbackImage
-                                        src={selectedTool.image_url}
-                                        alt={selectedTool.name}
-                                        fill
-                                        className="object-cover"
-                                        unoptimized
-                                    />
-                                </div>
-                                <div>
-                                    <div className="flex items-center gap-2 mb-2">
-                                        <h2 className="text-2xl font-bold text-fill-color leading-tight">
-                                            {selectedTool.website ? (
-                                                <a 
-                                                    href={selectedTool.website} 
-                                                    target="_blank" 
-                                                    rel="noopener noreferrer" 
-                                                    className="cursor-pointer transition-colors"
-                                                >
-                                                    {selectedTool.name}
-                                                </a>
-                                            ) : (
-                                                selectedTool.name
-                                            )}
-                                        </h2>
-                                        {selectedTool.website && (
-                                            <a 
-                                                href={selectedTool.website} 
-                                                target="_blank" 
-                                                rel="noopener noreferrer" 
-                                                className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color"
-                                                title="Visit Website"
-                                            >
-                                                <RiExternalLinkLine className="w-6 h-6" />
-                                            </a>
-                                        )}
-                                    </div>
-                                    <div className="flex items-center gap-2">
-                                        <span className="text-sm px-2 py-0.5 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                                            {selectedTool.category}
-                                        </span>
-                                        <button 
-                                            onClick={(e) => {
-                                                e.stopPropagation();
-                                                chatStore.setIsOpen(true);
-                                                chatStore.setActiveView('user');
-                                            }}
-                                            className="cursor-pointer opacity-70 hover:opacity-100 transition-all text-fill-color"
-                                            title="Bookmark"
-                                        >
-                                            <CiBookmark className="w-6 h-6" />
-                                        </button>
-                                    </div>
-                                </div>
-                            </div>
-
-                            <div className="mb-6">
-                                <h4 className="text-sm font-semibold text-fill-color/50 mb-2 uppercase tracking-wider">About</h4>
-                                <div className="max-h-40 overflow-y-auto pr-2">
-                                    <p className="text-base text-fill-color/80 leading-relaxed whitespace-pre-wrap">
-                                        {selectedTool.description}
-                                    </p>
-                                </div>
-                            </div>
-
-                            <div className="mb-8">
-                                <h4 className="text-sm font-semibold text-fill-color/50 mb-3 uppercase tracking-wider">Supported Chains</h4>
-                                <div className="flex flex-wrap gap-2 max-h-24 overflow-y-auto custom-scrollbar pr-2">
-                                    {selectedTool.chains && selectedTool.chains.map((chain, index) => (
-                                        <span key={index} className="text-xs px-3 py-1 rounded-full bg-blue-500/10 text-blue-400 border border-blue-500/20">
-                                            {chain}
-                                        </span>
-                                    ))}
-                                </div>
-                            </div>
-
-                            <div className="flex items-center gap-5 pt-6 mt-auto">
-                                {selectedTool.twitter && (
-                                    <a href={selectedTool.twitter} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Twitter">
-                                        <FaXTwitter className="w-6 h-6" />
-                                    </a>
-                                )}
-                                {selectedTool.instagram && (
-                                    <a href={selectedTool.instagram} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Instagram">
-                                        <FaInstagram className="w-6 h-6" />
-                                    </a>
-                                )}
-                                {selectedTool.youtube && (
-                                    <a href={selectedTool.youtube} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="YouTube">
-                                        <FaYoutube className="w-6 h-6" />
-                                    </a>
-                                )}
-                                {selectedTool.discord && (
-                                    <a href={selectedTool.discord} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Discord">
-                                        <BsDiscord className="w-6 h-6" />
-                                    </a>
-                                )}
-                                {selectedTool.telegram && (
-                                    <a href={selectedTool.telegram} target="_blank" rel="noopener noreferrer" className="cursor-pointer opacity-70 hover:opacity-100 transition-opacity text-fill-color" aria-label="Telegram">
-                                        <FaTelegram className="w-6 h-6" />
-                                    </a>
-                                )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
             <NwwOneeAIChat />
         </div>
-    );
-}
-
-export default function Web3ToolsContent() {
-    return (
-        <Suspense fallback={
-            <div className="flex justify-center items-center min-h-[50vh]">
-                <Spinner className="text-blue-500 size-10" />
-            </div>
-        }>
-            <Web3ToolsContentInner />
-        </Suspense>
     );
 }

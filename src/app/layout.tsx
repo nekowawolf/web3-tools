@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Inter, Geist } from 'next/font/google';
 import "@/styles/globals.css";
 import { cn } from "@/lib/utils";
+import { Toaster } from "sonner";
 
 const geist = Geist({subsets:['latin'],variable:'--font-sans'});
 
@@ -44,6 +45,7 @@ export default function RootLayout({
       </head>
       <body className={`${inter.className} body-color`}>
         {children}
+        <Toaster position="top-center" richColors />
       </body>
     </html>
   );
