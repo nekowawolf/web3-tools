@@ -145,7 +145,7 @@ export default function AddWeb3ToolClient() {
                         /add-web3-tool
                     </h1>
                     <p className="text-fill-color/60 text-sm max-w-full sm:max-w-xl leading-relaxed">
-                        Know a useful Web3 tool that belongs here? Submit its official website and help grow the directory. Every submission is reviewed before publishing.
+                        Know a useful Web3 tool that belongs here? Submit its URL and help grow the ecosystem directory. Every submission is reviewed before publishing.
                     </p>
                 </div>
 
@@ -214,7 +214,7 @@ export default function AddWeb3ToolClient() {
 
                     <div className="flex flex-col space-y-2">
                         <label htmlFor="contributor-link" className="text-sm font-semibold text-fill-color">
-                            Link <span className="text-fill-color/40 font-normal">(optional)</span>
+                            Contributor link <span className="text-fill-color/40 font-normal">(optional)</span>
                         </label>
                         <input
                             id="contributor-link"

@@ -12,7 +12,7 @@ export interface Web3Tool {
     _id: string;
     name: string;
     description: string;
-    category: string;
+    categories: string[];
     chains: string[];
     image_url: string;
     website?: string;

@@ -157,7 +157,7 @@ export const useWeb3Tools = (itemsPerPage: number = 8) => {
     const filteredTools = useMemo(() => {
         return toolsData.filter(tool => {
             const matchesSearch = tool.name.toLowerCase().includes(localSearchQuery.toLowerCase());
-            const matchesCategory = localCategory === 'All' || tool.category === localCategory;
+            const matchesCategory = localCategory === 'All' || (tool.categories && tool.categories.includes(localCategory));
             return matchesSearch && matchesCategory;
         });
     }, [toolsData, localSearchQuery, localCategory]);

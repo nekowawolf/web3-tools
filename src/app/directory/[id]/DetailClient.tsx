@@ -18,12 +18,14 @@ import { Web3Tool } from '@/types/web3tool';
 
 const getSuggestions = (currentTool: Web3Tool, allTools: Web3Tool[]) => {
     const currentChains = new Set(currentTool.chains ?? []);
+    const currentCategories = new Set(currentTool.categories ?? []);
 
     return allTools
         .filter((tool) => tool._id.toString() !== currentTool._id.toString())
         .map((tool) => {
             const sharedChains = (tool.chains ?? []).filter((chain) => currentChains.has(chain)).length;
-            const score = (tool.category === currentTool.category ? 4 : 0) + sharedChains;
+            const sharedCategory = (tool.categories ?? []).some((category) => currentCategories.has(category));
+            const score = (sharedCategory ? 4 : 0) + sharedChains;
             return { tool, score };
         })
         .sort((a, b) => b.score - a.score || a.tool.name.localeCompare(b.tool.name))
@@ -129,11 +131,13 @@ export default function DetailClient() {
                                 {tool.name}
                             </h1>
 
-                            {tool.category && (
+                            {(tool.categories?.length ?? 0) > 0 && (
                                 <div className="mb-4 flex flex-wrap gap-3">
-                                    <span className="rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-sm text-blue-400">
-                                        {tool.category}
-                                    </span>
+                                    {tool.categories.map((category) => (
+                                        <span key={category} className="rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1 text-sm text-blue-400">
+                                            {category}
+                                        </span>
+                                    ))}
                                 </div>
                             )}
 
@@ -306,10 +310,17 @@ export default function DetailClient() {
                                                 </h3>
                                             </div>
 
-                                            {suggestedTool.category && (
-                                                <span className="max-w-[110px] shrink-0 truncate rounded-full border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[10px] text-blue-400">
-                                                    {suggestedTool.category}
-                                                </span>
+                                            {(suggestedTool.categories?.length ?? 0) > 0 && (
+                                                <div className="ml-2 flex shrink-0 items-center gap-1.5">
+                                                    <span className="max-w-[110px] truncate rounded-full border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[10px] text-blue-400">
+                                                        {suggestedTool.categories[0]}
+                                                    </span>
+                                                    {suggestedTool.categories.length > 1 && (
+                                                        <span className="rounded-md border border-color bg-card-color px-2 py-0.5 text-[10px] font-bold text-fill-color/70">
+                                                            +{suggestedTool.categories.length - 1}
+                                                        </span>
+                                                    )}
+                                                </div>
                                             )}
                                         </div>
 

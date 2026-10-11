@@ -219,9 +219,14 @@ function Web3ToolsContentInner() {
                                             </h2>
 
                                             <div className="flex w-full flex-wrap justify-center gap-1.5">
-                                                {tool.category && (
-                                                    <span className="max-w-full truncate rounded-full border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[10px] text-blue-400">
-                                                        {tool.category}
+                                                {(tool.categories ?? []).slice(0, 2).map((category) => (
+                                                    <span key={category} className="max-w-full truncate rounded-full border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[10px] text-blue-400">
+                                                        {category}
+                                                    </span>
+                                                ))}
+                                                {(tool.categories?.length ?? 0) > 2 && (
+                                                    <span className="rounded-md border border-color bg-card-color px-2 py-0.5 text-[10px] font-bold text-fill-color/70">
+                                                        +{tool.categories.length - 2}
                                                     </span>
                                                 )}
                                                 {chains.length > 0 && (
