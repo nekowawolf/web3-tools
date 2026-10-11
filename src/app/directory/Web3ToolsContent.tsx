@@ -221,22 +221,22 @@ function Web3ToolsContentInner() {
                                             <div className="flex w-full flex-wrap justify-center gap-1.5">
                                                 {(tool.categories ?? []).slice(0, 2).map((category) => (
                                                     <span key={category} className="max-w-full truncate rounded-full border border-blue-500/20 bg-blue-500/10 px-2 py-0.5 text-[10px] text-blue-400">
-                                                        {category}
+                                                        <span className="relative top-px">{category}</span>
                                                     </span>
                                                 ))}
                                                 {(tool.categories?.length ?? 0) > 2 && (
                                                     <span className="rounded-md border border-color bg-card-color px-2 py-0.5 text-[10px] font-bold text-fill-color/70">
-                                                        +{tool.categories.length - 2}
+                                                        <span className="relative top-px">+{tool.categories.length - 2}</span>
                                                     </span>
                                                 )}
                                                 {chains.length > 0 && (
                                                     <span className="max-w-[92px] truncate rounded-md border border-color bg-card-color px-2 py-0.5 text-[10px] text-fill-color/70">
-                                                        {chains[0]}
+                                                        <span className="relative top-px">{chains[0]}</span>
                                                     </span>
                                                 )}
                                                 {chains.length > 1 && (
                                                     <span className="rounded-md border border-color bg-card-color px-2 py-0.5 text-[10px] font-bold text-fill-color/70">
-                                                        +{chains.length - 1}
+                                                        <span className="relative top-px">+{chains.length - 1}</span>
                                                     </span>
                                                 )}
                                             </div>

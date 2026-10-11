@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { notFound, useParams } from 'next/navigation';
 import { BsDiscord } from 'react-icons/bs';
@@ -44,6 +44,8 @@ export default function DetailClient() {
     const [tool, setTool] = useState<Web3Tool | null>(null);
     const [suggestedTools, setSuggestedTools] = useState<Web3Tool[]>([]);
     const [loading, setLoading] = useState(true);
+    const chainScrollRef = useRef<HTMLDivElement>(null);
+    const chainFadeRef = useRef<HTMLDivElement>(null);
 
     useEffect(() => {
         if (!id) return;
@@ -66,6 +68,30 @@ export default function DetailClient() {
 
         fetchDetail();
     }, [id]);
+
+    useEffect(() => {
+        const scroller = chainScrollRef.current;
+        const fade = chainFadeRef.current;
+        if (!scroller || !fade) return;
+
+        const checkOverflow = () => {
+            const { scrollWidth, clientWidth, scrollLeft } = scroller;
+            const hasMore = Math.ceil(scrollLeft + clientWidth) < scrollWidth - 1;
+            fade.style.opacity = hasMore ? '1' : '0';
+            fade.style.visibility = hasMore ? 'visible' : 'hidden';
+        };
+
+        const frame = requestAnimationFrame(checkOverflow);
+        const observer = new ResizeObserver(checkOverflow);
+        observer.observe(scroller);
+        scroller.addEventListener('scroll', checkOverflow);
+
+        return () => {
+            cancelAnimationFrame(frame);
+            observer.disconnect();
+            scroller.removeEventListener('scroll', checkOverflow);
+        };
+    }, [tool, loading]);
 
     if (loading) {
         return (
@@ -190,15 +216,22 @@ export default function DetailClient() {
                     </div>
 
                     {chains.length > 0 ? (
-                        <div className="flex flex-nowrap gap-2 overflow-x-auto pb-3 sm:gap-3 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-blue-500/30 hover:[&::-webkit-scrollbar-thumb]:bg-blue-500/60">
-                            {chains.map((chain) => (
-                                <span
-                                    key={chain}
-                                    className="shrink-0 whitespace-nowrap rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-xs font-medium text-blue-400 sm:px-4 sm:text-sm"
-                                >
-                                    {chain}
-                                </span>
-                            ))}
+                        <div className="relative">
+                            <div ref={chainScrollRef} className="flex flex-nowrap gap-2 overflow-x-auto pb-3 sm:gap-3 [&::-webkit-scrollbar]:h-1.5 [&::-webkit-scrollbar-track]:bg-transparent [&::-webkit-scrollbar-thumb]:rounded-full [&::-webkit-scrollbar-thumb]:bg-blue-500/30 hover:[&::-webkit-scrollbar-thumb]:bg-blue-500/60">
+                                {chains.map((chain) => (
+                                    <span
+                                        key={chain}
+                                        className="shrink-0 whitespace-nowrap rounded-full border border-blue-500/20 bg-blue-500/10 px-3 py-1.5 text-xs font-medium text-blue-400 sm:px-4 sm:text-sm"
+                                    >
+                                        {chain}
+                                    </span>
+                                ))}
+                            </div>
+                            <div
+                                ref={chainFadeRef}
+                                className="pointer-events-none absolute right-0 top-0 h-8 w-12 bg-gradient-to-l from-blue-600/20 to-transparent transition-opacity duration-200"
+                                style={{ opacity: 0, visibility: 'hidden' }}
+                            />
                         </div>
                     ) : (
                         <p className="text-sm text-fill-color/60">Chain information is not available yet.</p>
