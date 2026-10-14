@@ -6,6 +6,7 @@ import { Inter } from "next/font/google";
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://web3.nekowawolf.xyz'),
   title: "Web3 Tools",
   description: "Web3 Tools",
   icons: {

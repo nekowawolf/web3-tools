@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { BiLogoBitcoin } from 'react-icons/bi';
 import { FaCheck, FaCopy, FaEthereum } from 'react-icons/fa';
 import { SiKofi, SiSolana } from 'react-icons/si';
-import BackButton from '@/components/BackButton';
+import BackButton from '@/components/common/BackButton';
 import { Spinner } from '@/components/ui/spinner';
 import { submitSupportRequest } from '@/services/supporterService';
 

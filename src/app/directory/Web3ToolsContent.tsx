@@ -4,9 +4,9 @@ import { Suspense, useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { CgClose } from 'react-icons/cg';
 import { GoSearch } from 'react-icons/go';
-import { FallbackImage } from '@/components/FallbackImage';
-import NwwOneeAIChat from '@/components/NwwOneeAIChat';
-import Pagination from '@/components/Pagination';
+import { FallbackImage } from '@/components/common/FallbackImage';
+import NwwOneeAIChat from '@/components/chat/NwwOneeAIChat';
+import Pagination from '@/components/common/Pagination';
 import { Spinner } from '@/components/ui/spinner';
 import { useWeb3Tools } from '@/hooks/useWeb3Tools';
 

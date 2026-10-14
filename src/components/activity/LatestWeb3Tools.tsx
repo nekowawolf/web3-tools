@@ -4,9 +4,9 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { FaGlobe } from 'react-icons/fa';
-import { FallbackImage } from '@/components/FallbackImage';
+import { FallbackImage } from '@/components/common/FallbackImage';
 import { Spinner } from '@/components/ui/spinner';
-import Pagination2 from '@/components/Pagination2';
+import Pagination2 from '@/components/common/Pagination2';
 import { fetchWeb3ToolsData } from '@/services/web3ToolService';
 import { Web3Tool } from '@/types/web3tool';
 

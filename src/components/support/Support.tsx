@@ -5,7 +5,7 @@ import Link from 'next/link';
 import { BiLogoBitcoin } from 'react-icons/bi';
 import { SiKofi } from 'react-icons/si';
 import { Spinner } from '@/components/ui/spinner';
-import Pagination2 from '@/components/Pagination2';
+import Pagination2 from '@/components/common/Pagination2';
 import { fetchSupportersData } from '@/services/supporterService';
 import { Supporter } from '@/types/supporter';
 

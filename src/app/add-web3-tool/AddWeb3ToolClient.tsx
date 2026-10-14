@@ -6,7 +6,7 @@ import { toast } from 'sonner';
 import { AiOutlineExclamationCircle } from 'react-icons/ai';
 import { FaRegCircleCheck } from 'react-icons/fa6';
 import { LiaTimesCircleSolid } from 'react-icons/lia';
-import BackButton from '@/components/BackButton';
+import BackButton from '@/components/common/BackButton';
 import { Spinner } from '@/components/ui/spinner';
 import { fetchWeb3ToolsData, submitWeb3Tool } from '@/services/web3ToolService';
 
