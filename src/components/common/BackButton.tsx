@@ -2,7 +2,7 @@
 
 import { useRouter } from 'next/navigation';
 import Link from 'next/link';
-import { FaArrowLeft } from 'react-icons/fa';
+import { FiArrowLeft } from 'react-icons/fi';
 
 interface BackButtonProps {
     fallbackUrl: string;
@@ -17,9 +17,9 @@ export default function BackButton({ fallbackUrl, label = "Back to List", forceF
         return (
             <Link
                 href={fallbackUrl}
-                className="inline-flex items-center gap-2 text-fill-color/70 hover:text-fill-color mb-8 transition-colors cursor-pointer"
+                className="back-control mb-8"
             >
-                <FaArrowLeft className="w-4 h-4" />
+                <FiArrowLeft aria-hidden="true" />
                 {label}
             </Link>
         );
@@ -34,9 +34,9 @@ export default function BackButton({ fallbackUrl, label = "Back to List", forceF
         <a
             href={fallbackUrl}
             onClick={handleBack}
-            className="inline-flex items-center gap-2 text-fill-color/70 hover:text-fill-color mb-8 transition-colors cursor-pointer"
+            className="back-control mb-8"
         >
-            <FaArrowLeft className="w-4 h-4" />
+            <FiArrowLeft aria-hidden="true" />
             {label}
         </a>
     );
