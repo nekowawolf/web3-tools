@@ -121,11 +121,11 @@ export default function DetailClient({ posts }: { posts: BlogPost[] }) {
               <FallbackImage
                 src="https://cdn.nekowawolf.xyz/image/2026/1792948687_nwwonee_search.webp"
                 alt="No data found"
-                width={160}
-                height={160}
+                width={144}
+                height={144}
                 className="mx-auto"
               />
-              <p className="-mt-4 text-fill-color/50">No data available.</p>
+              <p className="mt-1 text-fill-color/50">No data available.</p>
             </div>
           ) : totalPages > 1 ? (
             <div className="mt-12 flex justify-center">
