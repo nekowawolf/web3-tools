@@ -119,7 +119,7 @@ export default function DetailClient({ posts }: { posts: BlogPost[] }) {
           {filteredPosts.length === 0 ? (
             <div className="py-1 text-center">
               <FallbackImage
-                src="https://cdn.nekowawolf.xyz/image/2026/1787422427_nwwonee_search.webp"
+                src="https://cdn.nekowawolf.xyz/image/2026/1792948687_nwwonee_search.webp"
                 alt="No data found"
                 width={160}
                 height={160}
